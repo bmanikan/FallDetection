@@ -91,13 +91,17 @@ class Dataset:
       dir = self.adl_dir
       name = 'adl_'
       bbox_file = adl_bbox
+
     #load model for bbox generation
     model = fasterrcnn(pretrained=True)
+    #utilize gpu if available
     if cuda.is_available():
       model = model.cuda()
+    #inference mode
     model.eval()
     l = os.listdir(dir)
     tqdm().pandas()
+    #iterate over the files in the directory
     for i in tqdm(range(len(l))):
       temp = []
       start = time.time()
@@ -107,20 +111,27 @@ class Dataset:
         image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
         #convert image to tensor for model
         tfm_img = transforms.ToTensor()(image)
+        #move to gpu
         if cuda.is_available():
           tfm_img = tfm_img.cuda()
-        x = [tfm_img]
-        predictions = model(x)
+        #make inference and returns dict containing "boxes,labels,scores"
+        predictions = model([tfm_img])
+        #predicted labels
         labels = predictions[0]['labels'].cpu().detach().numpy()
+        #model predicts '1' label for person
         person_box_coord = np.where(labels==1)[0]
+        #if many boxes are available, then we choose one with high score
         if person_box_coord.size > 1:
           id = np.argmax([predictions[0]['scores'][i].cpu().detach().numpy() for i in person_box_coord])
           id = person_box_coord[id]
         else:
           id = person_box_coord[0]
+        #get the bbox coordinates
         box_coord = predictions[0]['boxes'][id].unsqueeze(0).cpu().detach().numpy().astype('int')
+        #calculate bbox center point
         for x1,y1,x2,y2 in box_coord:
           box_center = (int(x1+(x2-x1)/2),int(y1+(y2-y1)/2))
           temp.append(box_center)
       print('time take for a file: ',time.time() - start)
+      #save the numpy array/image in a file for future processing 
       cv2.imwrite(os.path.join(bbox_file, name+f'{i}.jpg'),np.array(temp))
