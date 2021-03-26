@@ -3,17 +3,23 @@ import os
 import cv2
 import numpy as np
 from pathlib import Path
+from zipfile import ZipFile
+import time
+import random
+
 import torch
 from torch import cuda
+from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import random_split
 from tqdm.notebook import tqdm
-from zipfile import ZipFile
 import torchvision
 from torchvision import transforms
 from torchvision.models.detection import fasterrcnn_resnet50_fpn as fasterrcnn
-import time
+from sklearn.preprocessing import minmax_scale
 
-class Dataset:
-  def __init__(self,name='urfd'):
+
+class PrepareData:
+  def __init__(self,name='urfd',download=True,create_vectors=True):
     # create necessary folders to accomodate dataset
     wrk_dir = os.getcwd()
     #Parent directory
@@ -28,8 +34,13 @@ class Dataset:
     if not os.path.exists(os.path.join(wrk_dir, 'dataI/adl_seq')):
       os.mkdir(os.path.join(wrk_dir, 'dataI/adl_seq'))
     self.adl_dir = os.path.join(wrk_dir, 'dataI/adl_seq')
+    self.labels = {}
     #download dataset
-    self.download(name=name)
+    if download:
+      self.download(name=name)
+    #whether to create vector files
+    if create_vectors:
+      self.create_vectors([self.fall_dir, self.adl_dir])
   
   def extract_zip(self, file_name, dir):
     '''
@@ -49,7 +60,6 @@ class Dataset:
     Download the dataset from the URL
     '''
     if name == 'urfd':
-      tqdm().pandas()
       for n in tqdm(range(1,41)):
           # Add zeros to adapt files in Website
           if n < 10:
@@ -69,10 +79,17 @@ class Dataset:
     else:
       print("the available datasets are ['urfd]")
   
-  def prepare_data(self,folder='fall'):
+  def create_vectors(self,folder):
     '''
+    inputs:
+    folder: convert images in the corresponding folder to vectors
+    returns:
+    dictionary containing filenames and labels
     Create vectors based on bounding box center
     '''
+    assert type(folder) == list, "Expecting a list of directory path"
+    print(folder)
+
     #location for Fall sequence bbox center vector
     fall_bbox = os.path.join(self.data_dir,'fall_bbox')
     if not os.path.exists(fall_bbox):
@@ -82,16 +99,6 @@ class Dataset:
     adl_bbox = os.path.join(self.data_dir,'adl_bbox')
     if not os.path.exists(adl_bbox):
       os.mkdir(adl_bbox)
-
-    if folder == 'fall':
-      dir = self.fall_dir
-      name = 'fall_'
-      bbox_file = fall_bbox
-    else:
-      dir = self.adl_dir
-      name = 'adl_'
-      bbox_file = adl_bbox
-
     #load model for bbox generation
     model = fasterrcnn(pretrained=True)
     #utilize gpu if available
@@ -99,39 +106,90 @@ class Dataset:
       model = model.cuda()
     #inference mode
     model.eval()
-    l = os.listdir(dir)
-    tqdm().pandas()
-    #iterate over the files in the directory
-    for i in tqdm(range(len(l))):
-      temp = []
-      start = time.time()
-      for j in sorted(os.listdir(os.path.join(dir,l[i]))):
-        img_path = os.path.join(dir,l[i],j)
-        image = cv2.imread(img_path)
-        image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
-        #convert image to tensor for model
-        tfm_img = transforms.ToTensor()(image)
-        #move to gpu
-        if cuda.is_available():
-          tfm_img = tfm_img.cuda()
-        #make inference and returns dict containing "boxes,labels,scores"
-        predictions = model([tfm_img])
-        #predicted labels
-        labels = predictions[0]['labels'].cpu().detach().numpy()
-        #model predicts '1' label for person
-        person_box_coord = np.where(labels==1)[0]
-        #if many boxes are available, then we choose one with high score
-        if person_box_coord.size > 1:
-          id = np.argmax([predictions[0]['scores'][i].cpu().detach().numpy() for i in person_box_coord])
-          id = person_box_coord[id]
-        else:
-          id = person_box_coord[0]
-        #get the bbox coordinates
-        box_coord = predictions[0]['boxes'][id].unsqueeze(0).cpu().detach().numpy().astype('int')
-        #calculate bbox center point
-        for x1,y1,x2,y2 in box_coord:
-          box_center = (int(x1+(x2-x1)/2),int(y1+(y2-y1)/2))
-          temp.append(box_center)
-      print('time take for a file: ',time.time() - start)
-      #save the numpy array/image in a file for future processing 
-      cv2.imwrite(os.path.join(bbox_file, name+f'{i}.jpg'),np.array(temp))
+    for dir in folder:
+      if dir == self.fall_dir:
+        name = 'fall_'
+        label = 1
+        bbox_file = fall_bbox
+      else:
+        dir = self.adl_dir
+        label = 0
+        name = 'adl_'
+        bbox_file = adl_bbox
+
+      l = os.listdir(dir)
+      #iterate over the files in the directory
+      print(f"creating {name[:-1]} files")
+      for i in tqdm(range(len(l))):
+        temp = []
+        start = time.time()
+        for j in sorted(os.listdir(os.path.join(dir,l[i]))):
+          img_path = os.path.join(dir,l[i],j)
+          image = cv2.imread(img_path)
+          image = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+          #convert image to tensor for model
+          tfm_img = transforms.ToTensor()(image)
+          #move to gpu
+          if cuda.is_available():
+            tfm_img = tfm_img.cuda()
+          #make inference and returns dict containing "boxes,labels,scores"
+          predictions = model([tfm_img])
+          #predicted labels
+          labels = predictions[0]['labels'].cpu().detach().numpy()
+          #model predicts '1' label for person
+          person_box_coord = np.where(labels==1)[0]
+          #if many boxes are available, then we choose one with high score
+          if person_box_coord.size > 1:
+            id = np.argmax([predictions[0]['scores'][i].cpu().detach().numpy() for i in person_box_coord])
+            id = person_box_coord[id]
+          #if there is no person in the frame
+          elif person_box_coord.size < 1:
+            continue
+          else:
+            id = person_box_coord[0]
+          #get the bbox coordinates
+          box_coord = predictions[0]['boxes'][id].unsqueeze(0).cpu().detach().numpy().astype('int')
+          #calculate bbox center point
+          for x1,y1,x2,y2 in box_coord:
+            box_center = (int(x1+(x2-x1)/2),int(y1+(y2-y1)/2))
+            temp.append(box_center)
+        print('elapsed time: ',time.time() - start,end='\r')
+        #save the numpy array/image in a file for future processing 
+        file_path = os.path.join(bbox_file, name+f'{i}.npy')
+        np.save(file_path,np.array(temp))
+        self.labels[file_path] = label
+
+class URFDDataset(Dataset):
+  '''
+  Create PyTorch dataset class 
+  '''
+  def __init__(self,labels,clip_len=50):
+    #Labels dict of filenames and label
+    self.labels = labels
+    self.fnames = list(labels.keys())
+    #Frame width
+    self.clip_len = clip_len
+    #shuffle before splitting
+    random.shuffle(self.fnames)
+
+  def normalize(self,buffer):
+    #Normalize to range of 0-1
+    new_buffer = minmax_scale(buffer)
+    return new_buffer
+
+  def __getitem__(self,index):
+    fname = self.fnames[index]
+    label = self.labels[fname]
+    vectors = np.load(fname)
+    #Normalize the values to 0-1
+    vectors = self.normalize(vectors)
+    #Random window 
+    n = np.random.randint(0,len(vectors) - self.clip_len)
+    buffer = vectors[n:n + self.clip_len]
+    #Convert to tensor for processing
+    buffer = transforms.ToTensor()(buffer)
+    return buffer,label
+    
+  def __len__(self):
+    #return len of the data
+    return len(self.fnames)
