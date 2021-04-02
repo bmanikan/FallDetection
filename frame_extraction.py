@@ -1,6 +1,7 @@
 import cv2
 import os
 import time
+from utils import safedirs
 
 
 def process_video(videoPath, destPath, folder=False):
@@ -12,9 +13,6 @@ def process_video(videoPath, destPath, folder=False):
   Returns None.
   '''
   cap = cv2.VideoCapture(videoPath)
-  fps = cap.get(cv2.CAP_PROP_FPS)
-  width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
-  height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)
   filename = videoPath.split('/')[-1].split('.')[0]
   if folder:
     destPath = os.path.join(destPath, filename)
