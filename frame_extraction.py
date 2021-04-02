@@ -27,6 +27,14 @@ def process_video(videoPath, destPath, folder=False):
   cap.release()
   return None
 
+def file_check(destPath, file):
+  '''
+  check if files are available in destination
+  returns True if it exists and viceversa
+  '''
+  filename = file.split('.')[0]
+  destFiles = os.listdir(destPath)
+  return True if filename in destFiles else False 
 
 def extract(dataPath,destPath,folder=False):
   '''
@@ -36,12 +44,14 @@ def extract(dataPath,destPath,folder=False):
   folder: whether to create seperate folder for each video file in destination
   '''
   root, _, videos = next(os.walk(dataPath))
+  safedirs(destPath)
   assert len(videos) > 0, "Folder doesn't contain any files"
   for video in videos:
-    if video.split('.')[-1] not in ['mp4', 'avi']:
+    if video.split('.')[-1] not in ['mp4', 'avi'] or file_check(destPath, video):
+      print(f'skipping {video}')
       continue
     abs_path = os.path.join(root,video)
-    extract_frames(abs_path, destPath, folder=folder)
+    process_video(abs_path, destPath, folder=folder)
   return None
 
 
