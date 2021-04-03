@@ -4,12 +4,16 @@ def process_label(label,filename):
   else:
       return 0
 
-def rename_file(df,root, filenames):
+def assign_label(df,root,filenames):
   for filename in filenames:
     ext = filename.split('.')[-1]
-    file_id,frame_id = filename[:7], int(filename.split('.')[0].split('-')[-1])
-    df_label = int(df[(df[0] == file_id) & (df[1] == frame_id)][2])
-    label = process_label(df_label,file_id)
+    split_array = filename.split('.')[0].split('-')
+    file_id,frame_id = '-'.join(split_array[:2]), int(split_array[-1])
+    if 'adl' in file_id:
+      label = 0
+    else:
+      df_label = int(df[(df[0] == file_id) & (df[1] == frame_id)][2])
+      label = 1 if df_label == 1 else 0
     name = f'{file_id}_{frame_id}_{label}.{ext}'
     new_path = os.path.join(root, name)
     old_path = os.path.join(root,filename)
@@ -22,14 +26,15 @@ def enrich_labels(df, dataPath, folder=True):
   df: data frame consisting of details on labels
   datapath: the path of the folder containing frames
   folder: indicates the structure of the data
-  Returns: None
   '''
   if folder:
     root, dirs, _ = next(os.walk(dataPath))
     dir_array = [os.path.join(root,dir) for dir in dirs]
     for path in dir_array:
       root, _, files = next(os.walk(path))
-      rename_file(df,root,files)
+      assign_label(df,root,files)
   else:
     root, _, files = next(os.walk(dataPath))
-    rename_file(df, root, files)
+    assign_label(df, root, files)
+
+
