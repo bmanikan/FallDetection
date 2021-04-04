@@ -10,13 +10,13 @@ def assign_label(df,root,filenames):
     ext = filename.split('.')[-1]
     split_array = filename.split('.')[0].split('-')
     #extract id and frame
-    file_id,frame_id = '-'.join(split_array[:2]), int(split_array[-1])
+    file_id,frame_id = '-'.join(split_array[:2]), split_array[-1]
     #adl files doesnt contain falls hence assigning label 0 to all files
     if 'adl' in file_id:
       label = 0
     else:
       #check the label in dataframe for id and frame
-      df_label = int(df[(df[0] == file_id) & (df[1] == frame_id)][2])
+      df_label = int(df[(df[0] == file_id) & (df[1] == int(frame_id))][2])
       label = 1 if df_label == 1 else 0
     #Rename the files
     name = f'{file_id}_{frame_id}_{label}.{ext}'
