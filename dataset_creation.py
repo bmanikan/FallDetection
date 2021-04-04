@@ -23,7 +23,7 @@ class clipDataset(Dataset):
     test_size = len(ids) - train_size
     train_ids,test_ids = random_split(ids,[train_size,test_size],generator=torch.Generator().manual_seed(43))
     self.train_files,self.test_files = {i:[] for i in train_ids},{i:[] for i in test_ids}
-    for root,dir,files in os.walk(datapath):
+    for root,dir,files in os.walk(dataPath):
       for f in files:
         id = f.split('_')[0]
         if id in train_ids:
