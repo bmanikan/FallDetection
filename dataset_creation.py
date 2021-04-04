@@ -45,20 +45,17 @@ class clipDataset(Dataset):
       files = self.test_files
     else:
       raise Exception("invalid mode")
-    print(files.keys())
     id = index % len(files)
     path = files[list(files.keys())[id]]
     rand_n = random.randint(0,len(path)-self.clip_len)
-    print(rand_n)
     frame_path = path[rand_n : rand_n+self.clip_len]
-    print(frame_path)
     labels = []
     frames = []
     for path in frame_path:
       #frame is the datapath with label at the end of the filename
-      labels.append(path.split('.')[0][-1])
+      labels.append(int(path.split('.')[0][-1]))
       #read the image, convert to RGB and then to Tensor
       tensor_img = transforms.ToTensor()(cv2.cvtColor(cv2.imread(path),cv2.COLOR_BGR2RGB))
       frames.append(tensor_img)
     frames = torch.stack(frames,dim=0)
-    return frames, labels
+    return frames,  torch.IntTensor(labels)
