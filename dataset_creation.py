@@ -12,7 +12,7 @@ import random
 
 class clipDataset(Dataset):
   def __init__(self,df,dataPath,ids,clip_len=50):
-    assert type(ids) == list, "expectint a list of strings"
+    assert type(ids) == list, "expecting a list of strings"
     self.df = df
     self.clip_len = clip_len
     self.data_files = {i:[] for i in ids}
@@ -24,7 +24,8 @@ class clipDataset(Dataset):
     random.seed(43)
   
   def __len__(self):
-    return len(self.df)
+    l = int(sum([len(df[df[0]==id]) for id in ids])/50)
+    return l
   
   def __getitem__(self, index):
     files = self.data_files
