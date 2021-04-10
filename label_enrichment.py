@@ -23,6 +23,8 @@ def assign_label(df,root,filenames):
     new_path = os.path.join(root, name)
     old_path = os.path.join(root,filename)
     os.rename(old_path,new_path)
+    df.loc[(df[0] == file_id) & (df[1] == int(frame_id)), 'path'] = new_path
+    df.loc[(df[0] == file_id) & (df[1] == int(frame_id)), 2] = label
 
 
 def enrich_labels(df,dataPath,folder=True):
@@ -41,3 +43,5 @@ def enrich_labels(df,dataPath,folder=True):
   else:
     root, _, files = next(os.walk(dataPath))
     assign_label(df, root, files)
+
+
