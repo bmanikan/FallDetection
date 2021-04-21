@@ -24,7 +24,7 @@ class clipDataset(Dataset):
     random.seed(43)
   
   def __len__(self):
-    l = int(sum([len(df[df[0]==id]) for id in ids])/50)
+    l = int(sum([len(self.df[self.df[0]==id]) for id in ids])/50)
     return l
   
   def __getitem__(self, index):
