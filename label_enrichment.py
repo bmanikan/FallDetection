@@ -3,6 +3,9 @@ import os
 import datetime
 import time
 from tqdm import tqdm
+from utils import set_logger
+
+logger,logger_t = set_logger()
 
 t_set = lambda: datetime.datetime.now().astimezone()
 t_diff = lambda t: str(t_set() - t)

@@ -9,11 +9,34 @@ import tensorflow as tf
 from tensorflow.keras.layers.experimental import preprocessing
 import datetime
 import time
+import logging
+import sys
 
 
 t_set = lambda: datetime.datetime.now().astimezone()
 t_diff = lambda t: str(t_set() - t)
 t_stamp = lambda t=None: str(t) if t else str(t_set())
+
+root = os.getcwd()
+
+def set_logger():
+  logging.basicConfig(level=logging.INFO)
+  logger_t = logging.getLogger('withoutlevel')
+  logger = logging.getLogger('withlevel')
+
+  f_handler = logging.FileHandler(root+'/Falldetection.log')
+  f_handler_t = logging.FileHandler(root+'/Falldetection.log')
+
+  f_format = logging.Formatter('%(levelname)s - %(message)s')
+  f_format_t = logging.Formatter('%(message)s')
+
+  f_handler.setFormatter(f_format)
+  f_handler_t.setFormatter(f_format_t)
+
+  logger.addHandler(f_handler)
+  logger_t.addHandler(f_handler_t)
+  return logger, logger_t
+
 
 def safedirs(path):
   if not os.path.exists(path):

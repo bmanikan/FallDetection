@@ -15,10 +15,11 @@ from tensorflow.keras.metrics import Precision, Recall
 import datetime
 import time
 
-
 t_set = lambda: datetime.datetime.now().astimezone()
 t_diff = lambda t: str(t_set() - t)
 t_stamp = lambda t=None: str(t) if t else str(t_set())
+
+logger,logger_t = set_logger()
 
 ## Download dataset to the system
 root = os.getcwd()
@@ -32,14 +33,14 @@ logger.info(f'Total time for downloading and extracting entire dataset is {t_dif
 ## Process the dataset
 # create dataframe for further processing using the CSV file data
 csv = root + '/dataset/urfd/csv'
-df_fall = pd.read_csv('/content/dataset/urfd/csv/urfall-cam0-falls.csv',header=None)
-df_adl = pd.read_csv('/content/dataset/urfd/csv/urfall-cam0-adls.csv',header=None)
+df_fall = pd.read_csv(root + '/dataset/urfd/csv/urfall-cam0-falls.csv',header=None)
+df_adl = pd.read_csv(root + '/dataset/urfd/csv/urfall-cam0-adls.csv',header=None)
 dfs = pd.concat([df_fall,df_adl],ignore_index=True)
 dfs = dfs[[0,1,2]]
 dfs['path'] = None
 logger_t.info(f"Enrich labels into the filenames extractend from the CSV files")
 t = t_set()
-enrich_labels(dfs,'/content/dataset/urfd/frame')
+enrich_labels(dfs,root + '/dataset/urfd/frame')
 logger.info(f'Elapsed time for modifying filenames: {t_diff(t)}s.')
 
 
@@ -66,13 +67,13 @@ test_destPath = os.path.join(os.getcwd(),'subset/test')
 logger_t.info(f'train path= {train_destPath}\nvalidation path= {valid_destPath}\nTest path= {test_destPath}')
 
 t = t_set()
-createDataset(dfs,'/content/dataset/urfd/frame',train_destPath,ids = list(train_ids),size=size)
+createDataset(dfs, root + '/dataset/urfd/frame',train_destPath,ids = list(train_ids),size=size)
 logger.info(f"Time elapsed for creating Train subset is {t_diff(t)}")
 t = t_set()
-createDataset(dfs,'/content/dataset/urfd/frame',valid_destPath,ids = list(valid_ids),size=size)
+createDataset(dfs, root + '/dataset/urfd/frame',valid_destPath,ids = list(valid_ids),size=size)
 logger.info(f"Time elapsed for creating Validation subset is {t_diff(t)}")
 t = t_set()
-createDataset(dfs,'/content/dataset/urfd/frame',test_destPath,ids = list(test_ids),size=size)
+createDataset(dfs, root + '/dataset/urfd/frame',test_destPath,ids = list(test_ids),size=size)
 logger.info(f"Time elapsed for creating Test subset is {t_diff(t)}")
 
 
@@ -93,6 +94,8 @@ root = os.getcwd()
 train = datagen.flow_from_directory(root + '/trajectories/train',target_size=(224, 224),color_mode='grayscale',batch_size=batch_size)
 valid = datagen.flow_from_directory(root + '/trajectories/valid',target_size=(224, 224),color_mode='grayscale',batch_size=batch_size)
 test = datagen.flow_from_directory(root + '/trajectories/test',target_size=(224, 224),color_mode='grayscale',batch_size=batch_size)
+
+sys.stdout = open(root + 'Falldetection.log','a')
 
 model = create_model()
 model.compile(optimizer=tf.optimizers.Adam(learning_rate=1e-3), 
