@@ -1,42 +1,27 @@
+from tensorflow.keras.layers import Conv2D,MaxPool2D,GlobalAveragePooling2D,Dense,Dropout
+from tensorflow.keras.metrics import Precision, Recall
+import datetime
+import time
 
-import torch.nn as nn
-import torch.nn.functional as F
 
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        # layers of a CNN
-        self.conv1 = nn.Conv2d(1,32,3,stride=2,padding=1)   
-        self.conv2 = nn.Conv2d(32,64,3,stride=2,padding=1)
-        self.conv3 = nn.Conv2d(64,128,3,padding=1)
-        
-        # Linear layers
-        self.fc1 = nn.Linear(128*7*7, 1024)
-        self.fc2 = nn.Linear(1024,512)
-        self.fc3 = nn.Linear(512,2)
-        
-        # pooling layers
-        self.pool = nn.MaxPool2d(2,2)
-        
-        # dropout layers
-        self.dropout = nn.Dropout(0.2)
-    
-    def forward(self, x):
-        # forward behavior
-        x = F.relu(self.conv1(x))     # 112x112
-        x = self.pool(x)              # 56x56
-        x = F.relu(self.conv2(x))     # 28x28
-        x = self.pool(x)              # 14x14
-        x = F.relu(self.conv3(x))     # 14x14
-        x = self.pool(x)              # 7x7
 
-        
-        x = x.view(-1,128*7*7)
-        x = self.dropout(x)
-        x = F.relu(self.fc1(x))
-        x = self.dropout(x)
-        x = F.relu(self.fc2(x))
-        x = self.dropout(x)
-        x = torch.sigmoid(self.fc3(x))
-        
-        return x
+t_set = lambda: datetime.datetime.now().astimezone()
+t_diff = lambda t: str(t_set() - t)
+t_stamp = lambda t=None: str(t) if t else str(t_set())
+
+logger_t.info(f'{"="*100} \n\nSTEP 5: Create Model and train the model\n')
+
+def create_model():
+    model = tf.keras.Sequential([
+                  tf.keras.Input(shape=(224,224,1)),
+                  Conv2D(32,3,strides=2,padding='same',activation='relu',use_bias=False),
+                  MaxPool2D(),
+                  Conv2D(64,3,strides=2,padding='same',activation='relu',use_bias=False),
+                  MaxPool2D(),
+                  GlobalAveragePooling2D(),
+                  Dense(128),
+                  Dropout(0.5),
+                  Dense(64),
+                  Dropout(0.5),
+                  Dense(2,activation='sigmoid')])
+    return model
