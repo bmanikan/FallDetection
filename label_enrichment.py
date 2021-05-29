@@ -1,5 +1,14 @@
 import pandas as pd
 import os
+import datetime
+import time
+
+
+t_set = lambda: datetime.datetime.now().astimezone()
+t_diff = lambda t: str(t_set() - t)
+t_stamp = lambda t=None: str(t) if t else str(t_set())
+
+logger_t.info(f'{"="*200} \n\nSTEP 2: Assign labels to each frames')
 
 def assign_label(df,root,filenames):
   for filename in filenames:
@@ -23,6 +32,7 @@ def assign_label(df,root,filenames):
     new_path = os.path.join(root, name)
     old_path = os.path.join(root,filename)
     os.rename(old_path,new_path)
+    # create a entry in the dataframe for new path of the frame file
     df.loc[(df[0] == file_id) & (df[1] == int(frame_id)), 'path'] = new_path
     df.loc[(df[0] == file_id) & (df[1] == int(frame_id)), 2] = label
 
