@@ -12,6 +12,13 @@ from embed_data import embedded_data
 from model import create_model
 import tensorflow as tf
 from tensorflow.keras.metrics import Precision, Recall
+import datetime
+import time
+
+
+t_set = lambda: datetime.datetime.now().astimezone()
+t_diff = lambda t: str(t_set() - t)
+t_stamp = lambda t=None: str(t) if t else str(t_set())
 
 ## Download dataset to the system
 root = os.getcwd()
