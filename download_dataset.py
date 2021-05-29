@@ -2,7 +2,7 @@ import urllib.request as urlreq
 from zipfile import ZipFile
 import shutil
 import os
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 import datetime
 import time
 
