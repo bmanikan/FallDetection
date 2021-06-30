@@ -1,0 +1,42 @@
+1. [not research issue] it would be better to have blank lines and inline comments to make your codes more human readable and self-exaplained.
+
+
+2. we still need to consider to compare 120 & 240 50-frame with 180 50-frame dataset for train set (80%) and valid set (20%). In such case we can know whether or not it makes sense to train with more data.
+
+
+3. [concern] the current train set selection mechanism considers to choose from each of the 60 video's frames -- which means, the selection already covers everything. However, it might have bias and may influence the results. 
+---> [later] in later we should change to something like "random" select the video id fromthe 60 video of adl and 60 video of fall.
+
+
+4. the comparisons between 50-frame and 25-frame (120, 180, 240 dataset size)
+---> the video is in 30 frames per second
+---> right now we are considering 50-frame that is 1.7 seconds.
+
+
+5. [info summary] performance (180 50-frame training)
+---> 40 seconds for 20 epochs' training (with CPU only not GPU)
+---> 20 epochs, 15 is good
+---> 180 data spending 1.097s for predction = 6.095 ms per case
+---> 2.4~3.31 seconds for creating trajectory of one 50-frame via identifying boundingbox and drawing the centers.
+
+
+6. still need real-world different dataset (video shooting with different cameras)
+---> the first thing we should consider the use of other existing datasets for testing 
+---> flow: 
+a. trained model with the first dataset 
+b. then we generate test set from the 2nd, 3rd, 4th dataset (50-frame, 25-frame)
+c. then we do the evaluation with the trained model m1 and 2nd, 3rd, 4th test sets
+d. if the results are not good (< 80% accuracy), then we need to consider the use of "2nd dataset" to do "incremental training" -- load the trained model m1 and then train it further from there with the new train set.
+e. we need to generate train set (120, 180, 240) 50-frame and 25-frame from the 2nd dataset
+f. do the evaluation with the trained model m2 and 2nd, 3rd, 4th test sets (from step b)
+g. repeat setp d to g if the results are not good.
+
+---> [later] later we may consider to shoot new videos with different camera in different scenarios
+
+
+7. please also monitor and store the trained model's sizes - 120, 180, 240 50-frame and 25-frame data; will this cause the size of trained model increased incredibly or slightly.
+
+
+8. [later][future] multiple people in a scene
+
+9. [new issue and I forgot to talk in our meeting] could you please store the time spent information in different arrays for different actions (e.g., data loading, train set selection and creation, test set selection and creation, bounding box generation, trajectory drawing and image creation, model training, and test set's label prediction) and settings (i.e., size 120, 180, 240 and length 50-frame, 25-frame)? In such case, you could use matplotlib.pyplot to have a line graph for showing people the trends and comparisons.
