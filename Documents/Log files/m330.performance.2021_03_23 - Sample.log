@@ -1,0 +1,744 @@
+Started 'Python 3.7.9 64-bit ('base': conda)' kernel
+Python 3.7.9 (default, Aug 31 2020, 17:10:11) [MSC v.1916 64 bit (AMD64)]
+Type 'copyright', 'credits' or 'license' for more information
+IPython 7.19.0 -- An enhanced Interactive Python. Type '?' for help.
+
+
+Automated Spoken Language Detection
+
+
+Step 1. Setup (import and definitions)
+Imports and variable initialization
+
+[1]
+
+
+
+import os...
+C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\python\framework\dtypes.py:530: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+C:\Users\drtra\anaconda3\lib\site-packages\tensorboard\compat\tensorflow_stub\dtypes.py:541: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint8 = np.dtype([("qint8", np.int8, 1)])
+C:\Users\drtra\anaconda3\lib\site-packages\tensorboard\compat\tensorflow_stub\dtypes.py:542: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint8 = np.dtype([("quint8", np.uint8, 1)])
+C:\Users\drtra\anaconda3\lib\site-packages\tensorboard\compat\tensorflow_stub\dtypes.py:543: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint16 = np.dtype([("qint16", np.int16, 1)])
+C:\Users\drtra\anaconda3\lib\site-packages\tensorboard\compat\tensorflow_stub\dtypes.py:544: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_quint16 = np.dtype([("quint16", np.uint16, 1)])
+C:\Users\drtra\anaconda3\lib\site-packages\tensorboard\compat\tensorflow_stub\dtypes.py:545: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  _np_qint32 = np.dtype([("qint32", np.int32, 1)])
+C:\Users\drtra\anaconda3\lib\site-packages\tensorboard\compat\tensorflow_stub\dtypes.py:550: FutureWarning: Passing (type, 1) or '1type' as a synonym of type is deprecated; in a future version of numpy, it will be understood as (type, (1,)) / '(1,)type'.
+  np_resource = np.dtype([("resource", np.ubyte, 1)])
+
+
+Maiga added some useful functions are added so the program can use them from time to time
+
+Step 2. Define functions
+Maiga added use convert so we can see a more human readable time spent information
+
+[2]
+
+
+
+import datetime as dt...
+
+
+Step 3. Define paths and variables
+os.path.realpath(file)
+os.path.dirname(file)
+Maiga revised the use of / is better than \ since the latter is considerring the program is running on Windows and the former can be used on every platforms also with the / in the end of a path, any file or folder name can be appended directly root = os.path.dirname(os.getcwd()) + '\modeling\' can also alter the \ to / at very begining root = os.path.dirname(file).replace('\', "/") + '/'
+
+[3]
+
+
+
+root = os.path.dirname(__file__) + '/'...
+=================================================================
+Step 3. Define paths and variables
+-----------------------------------------------------------------
+logfilepath = c:\Users\drtra\Downloads\source\modeling/m330.performance.2021_03_23.log
+root = c:\Users\drtra\Downloads\source\modeling/
+datasetPath = c:\Users\drtra\Downloads\source\modeling/dataset/
+processingPath = c:\Users\drtra\Downloads\source\modeling/processing/
+modelPath = c:\Users\drtra\Downloads\source\modeling/model/
+This round is for m330.performance with epochs = 30
+[name: "/device:CPU:0"
+device_type: "CPU"
+memory_limit: 268435456
+locality {
+}
+incarnation: 6381864542695374165
+]
+=================================================================
+[4]
+
+
+
+# Maiga added...
+=================================================================
+Step 4. Gather files for training model, m330.performance
+-----------------------------------------------------------------
+[INFO] Retrieving clip information for en from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.en.txt
+[INFO] Retrieving clip information for en from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.en.txt
+[INFO] In total, there are 4256 en clips found from pre-stored list and took 0:00:00.451322seconds
+[INFO] In the list total Error (missing and empty) files number for [en]: 0
+[INFO] In the list total Warn (out-of-range) files number for [en]: 0
+[INFO] In total, there are 4256 en clips found from pre-stored list and took 0:00:00.451322seconds
+[INFO] In the list total Error (missing and empty) files number for [en]: 0
+[INFO] In the list total Warn (out-of-range) files number for [en]: 0
+[INFO] Retrieving clip information for fr from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.fr.txt
+[INFO] Retrieving clip information for fr from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.fr.txt
+[INFO] In total, there are 4261 fr clips found from pre-stored list and took 0:00:00.427042seconds
+[INFO] In the list total Error (missing and empty) files number for [fr]: 0
+[INFO] In the list total Warn (out-of-range) files number for [fr]: 0
+[INFO] In total, there are 4261 fr clips found from pre-stored list and took 0:00:00.427042seconds
+[INFO] In the list total Error (missing and empty) files number for [fr]: 0
+[INFO] In the list total Warn (out-of-range) files number for [fr]: 0
+[INFO] Retrieving clip information for ar from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.ar.txt
+[INFO] Retrieving clip information for ar from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.ar.txt
+[INFO] In total, there are 1606 ar clips found from pre-stored list and took 0:00:00.149849seconds
+[INFO] In the list total Error (missing and empty) files number for [ar]: 0
+[INFO] In the list total Warn (out-of-range) files number for [ar]: 0
+[INFO] In total, there are 1606 ar clips found from pre-stored list and took 0:00:00.149849seconds
+[INFO] In the list total Error (missing and empty) files number for [ar]: 0
+[INFO] In the list total Warn (out-of-range) files number for [ar]: 0
+[INFO] Retrieving clip information for de from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.de.txt
+[INFO] Retrieving clip information for de from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.de.txt
+[INFO] In total, there are 4261 de clips found from pre-stored list and took 0:00:00.400754seconds
+[INFO] In the list total Error (missing and empty) files number for [de]: 0
+[INFO] In the list total Warn (out-of-range) files number for [de]: 0
+[INFO] In total, there are 4261 de clips found from pre-stored list and took 0:00:00.400754seconds
+[INFO] In the list total Error (missing and empty) files number for [de]: 0
+[INFO] In the list total Warn (out-of-range) files number for [de]: 0
+[INFO] Retrieving clip information for fa from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.fa.txt
+[INFO] Retrieving clip information for fa from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.fa.txt
+[INFO] In total, there are 4261 fa clips found from pre-stored list and took 0:00:00.366689seconds
+[INFO] In the list total Error (missing and empty) files number for [fa]: 0
+[INFO] In the list total Warn (out-of-range) files number for [fa]: 0
+[INFO] In total, there are 4261 fa clips found from pre-stored list and took 0:00:00.366689seconds
+[INFO] In the list total Error (missing and empty) files number for [fa]: 0
+[INFO] In the list total Warn (out-of-range) files number for [fa]: 0
+[INFO] Retrieving clip information for ru from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.ru.txt
+[INFO] Retrieving clip information for ru from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.ru.txt
+[INFO] In total, there are 4261 ru clips found from pre-stored list and took 0:00:00.340677seconds
+[INFO] In the list total Error (missing and empty) files number for [ru]: 0
+[INFO] In the list total Warn (out-of-range) files number for [ru]: 0
+[INFO] In total, there are 4261 ru clips found from pre-stored list and took 0:00:00.340677seconds
+[INFO] In the list total Error (missing and empty) files number for [ru]: 0
+[INFO] In the list total Warn (out-of-range) files number for [ru]: 0
+[INFO] Retrieving clip information for zh-CN from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.zh-CN.txt
+[INFO] Retrieving clip information for zh-CN from c:\Users\drtra\Downloads\source\modeling/dataset/m330.performance.zh-CN.txt
+[INFO] In total, there are 4261 zh-CN clips found from pre-stored list and took 0:00:00.326155seconds
+[INFO] In the list total Error (missing and empty) files number for [zh-CN]: 0
+[INFO] In the list total Warn (out-of-range) files number for [zh-CN]: 0
+[INFO] In total, there are 4261 zh-CN clips found from pre-stored list and took 0:00:00.326155seconds
+[INFO] In the list total Error (missing and empty) files number for [zh-CN]: 0
+[INFO] In the list total Warn (out-of-range) files number for [zh-CN]: 0
+paths_train.shape:(21733,)
+y_train.shape:(21733, 7)
+paths_valid.shape:(5434,)
+y_valid.shape:(5434, 7)
+------------------------------------------------------------------
+[INFO] Preparing training and testing sets for model 'm330.performance' took 0:00:02.470676seconds), ended with 4261 zh-CN clips.
+=================================================================
+
+
+Step 5. Set up Layers for training models, m0, m1, m2, m3
+[5]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 5. Set up Layers for training model, m330.performance
+-----------------------------------------------------------------
+WARNING:tensorflow:From C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\python\ops\init_ops.py:1251: calling VarianceScaling.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+Starting batch generator for train_gen now: 243.8407056
+Batch generator for train_gen took 0:00:00.000220 seconds.
+Starting batch generator for valid_gen now: 243.8410285
+Batch generator for valid_gen took 0:00:00.000113 seconds.
+=================================================================
+
+
+Step 6. Train and save the Model
+
+maxData = 4260
+epochs = 1
+epoch number for model 1 in thesis is 7 and for model 2 is 11
+Battery Saving mode
+trainEpochmodelIndex
+[6]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 6. Train and save the model, m330.performance
+-----------------------------------------------------------------
+Epoch 1/30
+C:\Users\drtra\anaconda3\lib\site-packages\librosa\core\audio.py:162: UserWarning: PySoundFile failed. Trying audioread instead.
+  warnings.warn("PySoundFile failed. Trying audioread instead.")
+C:\Users\drtra\anaconda3\lib\site-packages\librosa\core\audio.py:162: UserWarning: PySoundFile failed. Trying audioread instead.
+  warnings.warn("PySoundFile failed. Trying audioread instead.")
+WARNING:tensorflow:From C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\python\ops\math_grad.py:1250: add_dispatch_support.<locals>.wrapper (from tensorflow.python.ops.array_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use tf.where in 2.0, which has the same broadcast rule as np.where
+C:\Users\drtra\anaconda3\lib\site-packages\librosa\core\audio.py:162: UserWarning: PySoundFile failed. Trying audioread instead.
+  warnings.warn("PySoundFile failed. Trying audioread instead.")
+169/169 [==============================] - 10978s 65s/step - loss: 1.8322 - acc: 0.2475 - val_loss: 1.7394 - val_acc: 0.3322
+Epoch 2/30
+168/169 [============================>.] - ETA: 47s - loss: 1.6653 - acc: 0.3566 c:\Users\drtra\Downloads\source\modeling/dataset/de/clips/common_voice_de_20022562.mp3
+169/169 [==============================] - 10229s 61s/step - loss: 1.6652 - acc: 0.3568 - val_loss: 1.6297 - val_acc: 0.3754
+Epoch 3/30
+169/169 [==============================] - 10243s 61s/step - loss: 1.5159 - acc: 0.4203 - val_loss: 1.4837 - val_acc: 0.4429
+Epoch 4/30
+169/169 [==============================] - 10242s 61s/step - loss: 1.4306 - acc: 0.4601 - val_loss: 1.4770 - val_acc: 0.4516
+Epoch 5/30
+169/169 [==============================] - 10273s 61s/step - loss: 1.3296 - acc: 0.5027 - val_loss: 1.3173 - val_acc: 0.5113
+Epoch 6/30
+168/169 [============================>.] - ETA: 47s - loss: 1.2405 - acc: 0.5407 c:\Users\drtra\Downloads\source\modeling/dataset/de/clips/common_voice_de_20236192.mp3
+169/169 [==============================] - 10281s 61s/step - loss: 1.2402 - acc: 0.5405 - val_loss: 1.2733 - val_acc: 0.5314
+Epoch 7/30
+168/169 [============================>.] - ETA: 48s - loss: 1.1616 - acc: 0.5710 c:\Users\drtra\Downloads\source\modeling/dataset/zh-CN/clips/common_voice_zh-CN_22069638.mp3
+169/169 [==============================] - 10346s 61s/step - loss: 1.1616 - acc: 0.5711 - val_loss: 1.2172 - val_acc: 0.5517
+Epoch 8/30
+168/169 [============================>.] - ETA: 48s - loss: 1.0774 - acc: 0.6061 c:\Users\drtra\Downloads\source\modeling/dataset/ar/clips/common_voice_ar_24041593.mp3
+169/169 [==============================] - 10368s 61s/step - loss: 1.0778 - acc: 0.6057 - val_loss: 1.1324 - val_acc: 0.5785
+Epoch 9/30
+169/169 [==============================] - 10416s 62s/step - loss: 1.0201 - acc: 0.6267 - val_loss: 1.0682 - val_acc: 0.6109
+Epoch 10/30
+169/169 [==============================] - 10372s 61s/step - loss: 0.9607 - acc: 0.6508 - val_loss: 1.0975 - val_acc: 0.6066
+Epoch 11/30
+169/169 [==============================] - 10361s 61s/step - loss: 0.9073 - acc: 0.6718 - val_loss: 0.9435 - val_acc: 0.6637
+Epoch 12/30
+169/169 [==============================] - 10370s 61s/step - loss: 0.8721 - acc: 0.6852 - val_loss: 0.9021 - val_acc: 0.6732
+Epoch 13/30
+169/169 [==============================] - 10364s 61s/step - loss: 0.8360 - acc: 0.6979 - val_loss: 0.8789 - val_acc: 0.6782
+Epoch 14/30
+169/169 [==============================] - 10353s 61s/step - loss: 0.7869 - acc: 0.7178 - val_loss: 0.8655 - val_acc: 0.6974
+Epoch 15/30
+168/169 [============================>.] - ETA: 48s - loss: 0.8006 - acc: 0.7136 c:\Users\drtra\Downloads\source\modeling/dataset/de/clips/common_voice_de_19118925.mp3
+169/169 [==============================] - 10430s 62s/step - loss: 0.7999 - acc: 0.7140 - val_loss: 0.8364 - val_acc: 0.6951
+Epoch 16/30
+169/169 [==============================] - 10425s 62s/step - loss: 0.7480 - acc: 0.7327 - val_loss: 0.8038 - val_acc: 0.7147
+Epoch 17/30
+168/169 [============================>.] - ETA: 48s - loss: 0.7207 - acc: 0.7411 c:\Users\drtra\Downloads\source\modeling/dataset/ar/clips/common_voice_ar_24059891.mp3
+169/169 [==============================] - 10440s 62s/step - loss: 0.7195 - acc: 0.7417 - val_loss: 0.7960 - val_acc: 0.7074
+Epoch 18/30
+169/169 [==============================] - 10447s 62s/step - loss: 0.7026 - acc: 0.7491 - val_loss: 0.7658 - val_acc: 0.7284
+Epoch 19/30
+169/169 [==============================] - 10430s 62s/step - loss: 0.6898 - acc: 0.7547 - val_loss: 0.7456 - val_acc: 0.7212
+Epoch 20/30
+168/169 [============================>.] - ETA: 48s - loss: 0.6630 - acc: 0.7673 c:\Users\drtra\Downloads\source\modeling/dataset/fr/clips/common_voice_fr_18218466.mp3
+169/169 [==============================] - 10431s 62s/step - loss: 0.6627 - acc: 0.7672 - val_loss: 0.7610 - val_acc: 0.7141
+Epoch 21/30
+169/169 [==============================] - 10426s 62s/step - loss: 0.6640 - acc: 0.7644 - val_loss: 0.7923 - val_acc: 0.7169
+Epoch 22/30
+169/169 [==============================] - 10458s 62s/step - loss: 0.6389 - acc: 0.7730 - val_loss: 0.7126 - val_acc: 0.7401
+Epoch 23/30
+168/169 [============================>.] - ETA: 48s - loss: 0.6075 - acc: 0.7846 c:\Users\drtra\Downloads\source\modeling/dataset/fr/clips/common_voice_fr_18938257.mp3
+169/169 [==============================] - 10441s 62s/step - loss: 0.6077 - acc: 0.7846 - val_loss: 0.7296 - val_acc: 0.7394
+Epoch 24/30
+169/169 [==============================] - 10436s 62s/step - loss: 0.6076 - acc: 0.7870 - val_loss: 0.7845 - val_acc: 0.7217
+Epoch 25/30
+169/169 [==============================] - 10443s 62s/step - loss: 0.6020 - acc: 0.7844 - val_loss: 0.8036 - val_acc: 0.7121
+Epoch 26/30
+168/169 [============================>.] - ETA: 48s - loss: 0.5812 - acc: 0.7951 c:\Users\drtra\Downloads\source\modeling/dataset/fa/clips/common_voice_fa_18571811.mp3
+c:\Users\drtra\Downloads\source\modeling/dataset/zh-CN/clips/common_voice_zh-CN_18773691.mp3
+169/169 [==============================] - 10495s 62s/step - loss: 0.5814 - acc: 0.7948 - val_loss: 0.7028 - val_acc: 0.7481
+Epoch 27/30
+168/169 [============================>.] - ETA: 48s - loss: 0.5696 - acc: 0.7981 c:\Users\drtra\Downloads\source\modeling/dataset/fr/clips/common_voice_fr_19643244.mp3
+169/169 [==============================] - 10437s 62s/step - loss: 0.5694 - acc: 0.7983 - val_loss: 0.7224 - val_acc: 0.7407
+Epoch 28/30
+168/169 [============================>.] - ETA: 48s - loss: 0.5557 - acc: 0.8051 c:\Users\drtra\Downloads\source\modeling/dataset/fr/clips/common_voice_fr_22727605.mp3
+169/169 [==============================] - 10436s 62s/step - loss: 0.5555 - acc: 0.8051 - val_loss: 0.6815 - val_acc: 0.7550
+Epoch 29/30
+168/169 [============================>.] - ETA: 48s - loss: 0.5523 - acc: 0.8058 c:\Users\drtra\Downloads\source\modeling/dataset/en/clips/common_voice_en_667730.mp3
+c:\Users\drtra\Downloads\source\modeling/dataset/fr/clips/common_voice_fr_19601842.mp3
+169/169 [==============================] - 10415s 62s/step - loss: 0.5515 - acc: 0.8061 - val_loss: 0.6647 - val_acc: 0.7619
+Epoch 30/30
+169/169 [==============================] - 10494s 62s/step - loss: 0.5274 - acc: 0.8148 - val_loss: 0.7252 - val_acc: 0.7420
+Training this model 'm330.performance' took 3 days, 14:44:41.963961 seconds.
+Saving this model 'm330.performance' took 0:00:00.102803 seconds.
+=================================================================
+
+
+Step 7. Convert model to TensorFlow Lite model Convert the model to a TensorFlow Lite model path to the SavedModel directory
+
+tf from LINE #21
+[7]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 7. Converting the trained model, m330.performance to TensorFlow Lite model
+-----------------------------------------------------------------
+WARNING:tensorflow:From C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\python\ops\init_ops.py:97: calling GlorotUniform.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\python\ops\init_ops.py:97: calling Zeros.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\lite\python\util.py:238: convert_variables_to_constants (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.convert_variables_to_constants`
+WARNING:tensorflow:From C:\Users\drtra\anaconda3\lib\site-packages\tensorflow\python\framework\graph_util_impl.py:270: extract_sub_graph (from tensorflow.python.framework.graph_util_impl) is deprecated and will be removed in a future version.
+Instructions for updating:
+Use `tf.compat.v1.graph_util.extract_sub_graph`
+INFO:tensorflow:Froze 8 variables.
+INFO:tensorflow:Converted 8 variables to const ops.
+Converting this model 'm330.performance' to TensorFlow Lite model took 0:00:02.821664 seconds.
+=================================================================
+
+
+Step 9. Preparing testset for testing a loaded trained model, m1, m2, and m3
+
+[8]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 9. Preparing the testset for testing the trained model, m330.performance
+-----------------------------------------------------------------
+C:\Users\drtra\anaconda3\lib\site-packages\librosa\core\audio.py:162: UserWarning: PySoundFile failed. Trying audioread instead.
+  warnings.warn("PySoundFile failed. Trying audioread instead.")
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s1.mp3' took 0:00:00.377540 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s2.mp3' took 0:00:00.718445 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s3.mp3' took 0:00:00.378204 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s4.mp3' took 0:00:00.546026 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s5.mp3' took 0:00:00.467139 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s6.mp3' took 0:00:00.398605 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s7.mp3' took 0:00:00.435716 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s8.mp3' took 0:00:00.713561 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s9.mp3' took 0:00:00.543103 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s10.mp3' took 0:00:00.435403 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s11.mp3' took 0:00:00.445726 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s12.mp3' took 0:00:00.541233 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s13.mp3' took 0:00:00.616707 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s14.mp3' took 0:00:00.802231 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s15.mp3' took 0:00:00.651695 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s16.mp3' took 0:00:00.317657 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s17.mp3' took 0:00:00.318582 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s18.mp3' took 0:00:00.542081 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s19.mp3' took 0:00:00.488786 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s20.mp3' took 0:00:00.331266 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s21.mp3' took 0:00:00.298710 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s22.mp3' took 0:00:00.472872 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s23.mp3' took 0:00:00.370114 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s24.mp3' took 0:00:00.532524 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s25.mp3' took 0:00:00.364816 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s26.mp3' took 0:00:00.360270 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s27.mp3' took 0:00:00.761244 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s28.mp3' took 0:00:00.382175 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s29.mp3' took 0:00:00.637961 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s30.mp3' took 0:00:00.463477 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s31.mp3' took 0:00:00.493112 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s32.mp3' took 0:00:00.703319 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s33.mp3' took 0:00:00.508351 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s34.mp3' took 0:00:00.871172 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s35.mp3' took 0:00:00.642776 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s36.mp3' took 0:00:00.511598 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s37.mp3' took 0:00:00.687400 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s38.mp3' took 0:00:00.563921 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s39.mp3' took 0:00:00.910351 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s40.mp3' took 0:00:00.353822 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s41.mp3' took 0:00:00.381234 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s42.mp3' took 0:00:00.416406 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s43.mp3' took 0:00:00.327986 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s44.mp3' took 0:00:00.341875 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s45.mp3' took 0:00:00.333661 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s46.mp3' took 0:00:00.289821 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s47.mp3' took 0:00:00.340607 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s48.mp3' took 0:00:00.322938 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s49.mp3' took 0:00:00.295892 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s50.mp3' took 0:00:00.318940 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s51.mp3' took 0:00:00.339040 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s52.mp3' took 0:00:00.363988 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s53.mp3' took 0:00:00.281735 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s54.mp3' took 0:00:00.337321 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s55.mp3' took 0:00:00.337155 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s56.mp3' took 0:00:00.348717 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s57.mp3' took 0:00:00.346488 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s58.mp3' took 0:00:00.351970 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s59.mp3' took 0:00:00.344141 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s60.mp3' took 0:00:00.364766 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s61.mp3' took 0:00:00.359019 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s62.mp3' took 0:00:00.348640 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s63.mp3' took 0:00:00.354040 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s64.mp3' took 0:00:00.359562 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s65.mp3' took 0:00:00.348761 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s66.mp3' took 0:00:00.364608 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s67.mp3' took 0:00:00.381894 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s68.mp3' took 0:00:00.305082 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s69.mp3' took 0:00:00.378102 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s70.mp3' took 0:00:00.363358 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s71.mp3' took 0:00:00.319094 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s72.mp3' took 0:00:00.258426 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s73.mp3' took 0:00:00.353985 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s74.mp3' took 0:00:00.319769 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s75.mp3' took 0:00:00.339765 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s76.mp3' took 0:00:00.332798 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s77.mp3' took 0:00:00.349346 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s78.mp3' took 0:00:00.284964 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s79.mp3' took 0:00:00.253775 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s80.mp3' took 0:00:00.281221 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s81.mp3' took 0:00:00.348216 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s82.mp3' took 0:00:00.357800 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s83.mp3' took 0:00:00.339336 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s84.mp3' took 0:00:00.358235 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s85.mp3' took 0:00:00.342578 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s86.mp3' took 0:00:00.371876 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s87.mp3' took 0:00:00.349860 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s88.mp3' took 0:00:00.349762 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s89.mp3' took 0:00:00.359067 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s90.mp3' took 0:00:00.368231 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s91.mp3' took 0:00:00.475475 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s92.mp3' took 0:00:00.369621 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s93.mp3' took 0:00:00.627103 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s94.mp3' took 0:00:00.327863 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s95.mp3' took 0:00:00.333019 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s96.mp3' took 0:00:00.397140 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s97.mp3' took 0:00:00.462771 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s98.mp3' took 0:00:00.308865 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s99.mp3' took 0:00:00.418666 seconds.
+Preparing clip 'c:\Users\drtra\Downloads\source\modeling/testset/s100.mp3' took 0:00:00.396616 seconds.
+--time spent in total---
+Preparing 100 clips as the testset took 0:00:42.102495 seconds.
+=================================================================
+
+
+Step 10. Testing the loaded trained model, m1, m2, and m3
+
+
+
+Maiga added load the trained model so we can test the testset one by one with loop and logs within the logs, we can calculate precision, recall, and F0.5 and F1 values Step 8. Load the trained model
+
+[10]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 8. Load the trained model, m330.performance
+-----------------------------------------------------------------
+Loading this model 'm330.performance' took 0:00:00.736491 seconds.
+=================================================================
+
+
+Step 10. Testing the loaded trained model, m1, m2, and m3
+
+[11]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 10. Testing the loaded trained model, m330.performance
+-----------------------------------------------------------------
+Using this model 'm330.performance' to test the 100 clips in testset took 0:00:00.330249 seconds.
+s1
+s2
+s3
+s4
+s5
+s6
+s7
+s8
+s9
+s10
+s11
+s12
+s13
+s14
+s15
+s16
+s17
+s18
+s19
+s20
+s21
+s22
+s23
+s24
+s25
+s26
+s27
+s28
+s29
+s30
+s31
+s32
+s33
+s34
+s35
+s36
+s37
+s38
+s39
+s40
+s41
+s42
+s43
+s44
+s45
+s46
+s47
+s48
+s49
+s50
+s51
+s52
+s53
+s54
+s55
+s56
+s57
+s58
+s59
+s60
+s61
+s62
+s63
+s64
+s65
+s66
+s67
+s68
+s69
+s70
+s71
+s72
+s73
+s74
+s75
+s76
+s77
+s78
+s79
+s80
+s81
+s82
+s83
+s84
+s85
+s86
+s87
+s88
+s89
+s90
+s91
+s92
+s93
+s94
+s95
+s96
+s97
+s98
+s99
+s100
+de
+en
+en
+en
+en
+en
+en
+en
+en
+en
+en
+de
+fa
+de
+en
+en
+en
+en
+fa
+en
+en
+fa
+en
+en
+en
+en
+en
+en
+en
+de
+de
+de
+de
+de
+de
+fa
+de
+ru
+fa
+fr
+fr
+de
+ar
+ru
+ar
+ar
+fa
+ar
+fa
+fr
+fr
+fa
+fr
+en
+fa
+en
+fr
+en
+fr
+fr
+en
+en
+en
+en
+en
+fr
+en
+en
+fr
+en
+de
+fr
+fr
+de
+de
+en
+en
+en
+fa
+en
+fa
+en
+en
+en
+fr
+en
+de
+fr
+en
+en
+fa
+fr
+zh-CN
+fa
+zh-CN
+zh-CN
+fr
+fa
+zh-CN
+zh-CN
+=================================================================
+
+
+Maiga added Step 11. Load the ground truth for the testset
+
+[12]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 11. Load the ground truth for the testset for the trained model m330.performance
+-----------------------------------------------------------------
+true_label = 0        en
+1        en
+2        en
+3        en
+4        en
+      ...  
+95    zh-CN
+96    zh-CN
+97    zh-CN
+98    zh-CN
+99    zh-CN
+Name: label, Length: 100, dtype: object
+=================================================================
+
+
+Maiga added Step 12. Accuracy Analysis (true_label<-->predict_label) for the trained model
+
+[13]
+
+
+
+logFile = open(logfilepath, 'a')...
+=================================================================
+Step 12. Accuracy Analysis (true_label<-->predict_label) for the trained model, m330.performance
+-----------------------------------------------------------------
+Accuracy Performance for Language en :
+support is: 25
+precision is: 0.4318181818181818
+recall is: 0.76
+F0.5 Score = 0.4726368159203981
+F1 Score = 0.5507246376811594
+F2 Score = 0.6597222222222223
+
+
+Accuracy Performance for Language fr :
+support is: 25
+precision is: 0.1875
+recall is: 0.12
+F0.5 Score = 0.16853932584269662
+F1 Score = 0.14634146341463414
+F2 Score = 0.1293103448275862
+
+
+Accuracy Performance for Language ar :
+support is: 10
+precision is: 0.0
+recall is: 0.0
+F0.5 Score = 0.0
+F1 Score = 0.0
+F2 Score = 0.0
+
+
+Accuracy Performance for Language de :
+support is: 10
+precision is: 0.0
+recall is: 0.0
+F0.5 Score = 0.0
+F1 Score = 0.0
+F2 Score = 0.0
+
+
+Accuracy Performance for Language fa :
+support is: 10
+precision is: 0.07142857142857142
+recall is: 0.1
+F0.5 Score = 0.07575757575757576
+F1 Score = 0.08333333333333333
+F2 Score = 0.0925925925925926
+
+
+Accuracy Performance for Language ru :
+support is: 10
+precision is: 0.0
+recall is: 0.0
+F0.5 Score = 0.0
+F1 Score = 0.0
+F2 Score = 0.0
+
+
+Accuracy Performance for Language zh-CN :
+support is: 10
+precision is: 1.0
+recall is: 0.5
+F0.5 Score = 0.8333333333333334
+F1 Score = 0.6666666666666666
+F2 Score = 0.5555555555555556
+
+
+=================================================================

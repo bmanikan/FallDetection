@@ -1,0 +1,192 @@
+New Dataset
+http://mica.edu.vn:8000/KinectData/public/
+https://www.mica.edu.vn/perso/Tran-Thi-Thanh-Hai/CMDFALL.html
+
+============================
+50-frame
+============================
+
+1. training time
+1.25 average seconds per epoch for 50 frames (120)
+1.25 average seconds per epoch for 50 frames (180)
+2.3 average seconds per epoch for 50 frames (240)
+
+2. accuracy 
+10 epoches (240) 100%
+---> 2.3 * 10 = 23 seconds
+13 epoches (120) 100%, 10: 99.31
+---> 1.25 * 13 = 16.25 seconds
+13 epoches (180) 99.31% --> 15: 97.
+---> 1.25 * 13 = 16.25 seconds
+
+3. bounding + trajectory time
+50 frames: 1.67 seconds
+
+1.95 average seconds for 50 frames (180)
+---> 0.3 seconds more
+2.2  average seconds for 50 frames (240)
+---> 0.5 seconds more
+2.5  average seconds for 50 frames (120)
+---> 0.7 seconds more
+
+50 frames --> 2 seconds
+
+
+4. time spent for preparation of training
+
+2.5  average seconds for 50 frames (120)
+---> 2.5 seconds * 120 = 300 seconds
+1.95 average seconds for 50 frames (180)
+---> 1.95 seconds * 180 = 351 seconds
+2.2  average seconds for 50 frames (240)
+---> 2.2 seconds * 240 = 528 seconds
+
+
+5. time spent for training
+13 epoches (120) 100%, 10: 99.31
+---> 1.25 * 13 = 16.25 seconds
+---> 16.25 + 300 = 316.25 seconds (plus preparation)
+13 epoches (180) 99.31% --> 15: 97.
+---> 1.25 * 13 = 16.25 seconds
+---> 16.25 + 351 = 367.25 seconds (plus preparation)
+10 epoches (240) 100%
+---> 2.3 * 10 = 23 seconds
+---> 23 + 528 = 551 seconds (plus preparation)
+
+6. response time
+75 ms for recognizing 50 frame (180)
+---> 75ms + 0.3 seconds (bounding box+trajectory image) = 0.3 seconds
+86 ms for recognizing 50 frame (120)
+---> 75ms + 0.7 seconds (bounding box+trajectory image) = 0.7 seconds
+1 second and 86 ms for recognizing 50 frame (240)
+---> 1 second + 0.5 seconds (bounding box+trajectory image) = 1.5 seconds
+
+
+7. precision
+10 epoches 99.48% for 50 frames; 13: 100% (240)
+13 epoches 99.31% for 50 framee; 10: 97.87 (120)
+13 epoches 98.97% for 50 frames; 10: 98.61 (180)
+
+
+8. recall
+10 epoches 98.96% for 50 frames; 13: 100% (240)
+13 epoches 99.31% for 50 frames; 10: 98.61 (180)
+13 epoches 100% for 50 framee; 10: 95.83 (120)
+
+
+Researchers' NOTE: trade-off between response time vs. performance (precision/recall/F)
+Researchers' NOTE: could ignore the training time (plus preparation) due to it is less than TEN (10) minutes
+
+
+==================================
+25-frame
+============================
+
+1. training time
+1.4 average seconds per epoch for 25 frames (120)
+2.4 average seconds per epoch for 25 frames (180)
+2.4 average seconds per epoch for 25 frames (240)
+
+
+2. accuracy 
+9/10 epoches (120) 100%
+---> 1.4 * 10 = 14 seconds
+9/10 epoches (240) 100%
+---> 2.4 * 10 = 24 seconds
+12 epoches (180) 100% --> 9: 97.92%; 10: 99.48
+---> 2.4 * 12 = 28.8 seconds
+
+
+3. bounding + trajectory time
+25 frames: 0.83 seconds
+
+1.15  average seconds for 25 frames (120)
+---> 0.3 seconds more
+1.15 average seconds for 25 frames (180)
+---> 0.3 seconds more
+1.15  average seconds for 25 frames (240)
+---> 0.3 seconds more
+
+
+
+3. time spent for preparation of training
+
+1.15  average seconds for 25 frames (120)
+---> 1.15 seconds * 120 = 138 seconds
+1.15 average seconds for 25 frames (180)
+---> 1.15 seconds * 180 = 207 seconds
+1.15 average seconds for 25 frames (240)
+---> 1.15 seconds * 240 = 276 seconds
+
+
+4. time spent for training
+9/10 epoches (120) 100%
+---> 1.4 * 10 = 14 seconds
+---> 14 + 138 = 152 seconds (plus preparation)
+12 epoches (180) 100% --> 9: 97.92%; 10: 99.48
+---> 28.8 * 12 = 28.8 seconds
+---> 28.8 + 207 = 235.8 seconds (plus preparation)
+9/10 epoches (240) 100%
+---> 2.4 * 10 = 24 seconds
+---> 24 + 276 = 300 seconds (plus preparation)
+
+
+5. response time
+81 ms for recognizing 25 frame (120)
+---> 81 ms + 0.3 seconds (bounding box+trajectory image) = 0.3 seconds
+1 second and 98 ms for recognizing 25 frame (180)
+---> 1 second + 0.3 seconds (bounding box+trajectory image) = 1.3 seconds
+1 second and 124 ms for recognizing 25 frame (240)
+---> 1.124 second + 0.3 seconds (bounding box+trajectory image) = 1.4 seconds
+
+
+6. precision
+9/10 epoches 99.48%/100% for 25 frames; 12: 99.48% (240)
+9/10 epoches 99.31%/100% for 25 frames; 12: 100% (180)
+9/10 epoches 94.85%/98.97% for 25 framee; 12: 98.97% (120)
+
+
+7. recall
+9/10 epoches 100%/100% for 25 frames; 12: 99.31% (180)
+9/10 epoches 95.83%/100% for 25 framee; 12: 100% (120)
+9/10 epoches 98.96%/99.48% for 25 frames; 12: 100% (240)
+
+
+Researchers' NOTE: making sense to have better performance in terms of precision/recall/F-value, the reason is "'falling' will not be lasting for more than 1 second." Some noises that outside of the falling "time frame" will be included when we use more frame setting like 50-frame.
+
+Researchers' NOTE: not so much concern on the trade-off between response time vs. performance (precision/recall/F) - closer 99% and the response time is 0.3 second which is same like earlier 50-frame 180 case.
+
+Researchers' NOTE: could ignore the training time (plus preparation) due to it is less than FIVE minutes
+
+====================================
+New Dataset - preliminary test
+============================
+Researchers' NOTE: new dataset's accuracy around 50%
+
+
+====================================
+NOTES
+============================
+
+0. [Later][Paper Writing] Systematic Literature Review
+
+1. [the use of the visualized log] a 3 to 5 minutes of demo video so people in the future can also learn how to do it
+
+2. [test of new dataset] run something 100 times randomly choose test cases, identify bounding box, and create trajectory image and then evalute/test the SIX pre-trained models (we still want to have the time logged and visualized) --> average (be more convinced for readers)
+
+3. [Later][incremental learning] we can create a mp4 from the detected falling frames and notify caregivers by mobile app or email with mp4 embedded. The caregivers can Yes/No to verify the recognition. Once the system gets a number or NO responses which is higher than a threshold, then in the midnight the system can consider to re-train the model with last day's video feeds.
+
+4. [double check] 50-frame three test cases need to calculate bounding box and trajectory time once again under same situation (at once)
+
+5. [new dataset] we need to revisiting the extracted/selected 50-frame and labelling them correctly. We will have 300, 360 50-frame dataset first.
+
+6. [new dataset] making sure when the creation of the trajectory image, we are following the correct older instead of the filename in alphabetical order (due to may be the function will return 0, 1, 10, 11, ..., 19, 2, 20, 21,... instead of 0, 1, 2, 3, 4....)
+
+7. [new dataset] we can further "random" extract 25 frames from the original 50-frame dataset so we can easier and be more confident on all of the selected 25-frame cases in falling are really "falling".
+
+8. [new dataset] test against with the SIX trained models with 25- and 50-frame test cases.
+
+*. [not research issue] it would be better to have blank lines and inline comments to make your codes more human readable and self-exaplained.
+
+*. [concern] the current train set selection mechanism considers to choose from each of the 60 video's frames -- which means, the selection already covers everything. However, it might have bias and may influence the results. 
+---> [later] in later we should change to something like "random" select the video id fromthe 60 video of adl and 60 video of fall.
