@@ -1,4 +1,6 @@
 Conference: https://infoscale.eai-conferences.org/2021/
+Published on: Springer (SCOPUS indexed)
+Format: Springer LNICST 
 Deadline for paper submission: 1-Sept-2021
 
 Example papers to learn for writing:
@@ -24,13 +26,13 @@ The Conference requires 12-15 page for submission. and 6-11 pages for show.
 We will have 6 Sections out of which 2 are for Introduction and Conclusion. 
 
 Page distribution:
-* Introduction >> 1 
-* Abstract >> 0.5
-* Conclusion >> 1
-* section 2 >> 2
+* Introduction 	>> 1 
+* Abstract 		>> 0.5
+* Conclusion 	>> 1
+* section 2 	>> 2
 * section 3,4,5 >> 3 each
 
-Section 2,3,4 talks about the approach in detail.
+Section 3,4,5 talks about the approach in detail.
 We will have a Pseudocode for explaining the working of our approach.
 Also, have corresponding images and Tables wherever necessary.
 
