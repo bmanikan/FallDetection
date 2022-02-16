@@ -1,2 +1,0 @@
-# FallDetection
-Research project FallDetection
